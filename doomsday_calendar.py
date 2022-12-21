@@ -39,6 +39,7 @@ e: extreme mode. guess random dates between the year 1753 and 3000
 mode: """
 
 gamemodestr = """t: timed mode. game ends when timer runs out (default)
+n: number of questions mode. game ends when a certain number of questions, regardless of right or wrong answer.
 s: score mode. game ends when a certain score is reached
 m: mistake mode. game ends when a certain number of errors are made 
 mode: """
@@ -108,10 +109,12 @@ def main():
     else:
         raise Exception("submode not found")
 
-    gamemode = getmode(["t", "s", "m"], gamemodestr)
+    gamemode = getmode(["t", "n", "s", "m"], gamemodestr)
 
     if gamemode == "t":
         param = getparam("Enter max time in minutes", int)
+    elif gamemode == "n":
+        param = getparam("Enter max questions", int)
     elif gamemode == "s":
         param = getparam("Enter max score", int)
     elif gamemode == "m":
@@ -166,6 +169,8 @@ def done(config):
     elif gamemode == "s" and score == endpoints:
         return True
     elif gamemode == "m" and mistakes == endpoints:
+        return True
+    elif gamemode == "n" and mistakes + score == endpoints:
         return True
     return False
 
