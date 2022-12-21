@@ -130,6 +130,7 @@ def main():
         "start": d1,
         "end": d2,
         "total_days": (d2 - d1).days,
+        "explain": True
     }
 
     setup(config, param)
@@ -202,17 +203,7 @@ def update(config):
         print("\tcorrect!")
     else:
         mistakes += 1
-        if mode == "d":
-            ans = dt(2100, date.month, date.day).strftime("(%d %b: %w)")
-        else:
-            cent = date.year // 100
-            centd, year = [2, 0, 5, 3][(cent) % 4], date.year % 100
-            a, b = year // 12, year % 12
-            yearstr = f"{cent*100}: {centd}, {year-b}: {a%7}, {b}: {(b+b//4)%7}"
-            if mode == "n":
-                ans = dt(2100, date.month, date.day).strftime(f"(%d %b: %w, {yearstr})")
-            else:
-                ans = f"({yearstr})"
+        ans = explain(config, date) if config['explain'] else ""
         print("\twrong... " + date.strftime(f"%A {ans}"))
 
 
@@ -221,6 +212,21 @@ def equal(config, data: dt, inpt: str):
 
 
 ### specific gameplay functions
+
+def explain(config, date):
+    mode = config['mode']
+    if mode == "d":
+        ans = dt(2100, date.month, date.day).strftime("(%d %b: %w)")
+    else:
+        cent = date.year // 100
+        centd, year = [2, 0, 5, 3][(cent) % 4], date.year % 100
+        a, b = year // 12, year % 12
+        yearstr = f"{cent*100}: {centd}, {year-b}: {a%7}, {b}: {(b+b//4)%7}"
+        if mode == "n":
+            ans = dt(2100, date.month, date.day).strftime(f"(%d %b: %w, {yearstr})")
+        else:
+            ans = f"({yearstr})"
+    return ans
 
 
 def get_rand_date(config) -> dt:
