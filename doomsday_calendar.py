@@ -30,22 +30,22 @@ def countdown_done():
 modestr = """n: normal mode. guess a full date (default)
 d: date only mode
 y: year only mode
-mode: """
+mode: """, ["n", "d", "y"]
 
 submodestr = """n: normal mode. guess random dates for the current year and next year (default)
 c: custom mode. guess random dates for custom range.
 w: wide mode. guess random dates this century and the previous one
 e: extreme mode. guess random dates between the year 1753 and 3000
-mode: """
+mode: """, ["n", "c", "w", "e"]
 
 gamemodestr = """t: timed mode. game ends when timer runs out (default)
 n: number of questions mode. game ends when a certain number of questions, regardless of right or wrong answer.
 s: score mode. game ends when a certain score is reached
 m: mistake mode. game ends when a certain number of errors are made 
-mode: """
+mode: """, ["t", "n", "s", "m"]
 
 
-def getmode(ans: List[str], prompt: str):
+def getmode(prompt: str, ans: List[str]):
     ans += [""]
     mode = input(prompt)
     while mode not in ans:
@@ -85,10 +85,10 @@ def year_range_validator(inp: str):
 def main():
     print("Welcome to Doomsday Trainer")
     print("enter mode:")
-    mode = getmode(["n", "d", "y"], modestr)
+    mode = getmode(*modestr)
 
     if mode != "d":
-        submode = getmode(["n", "c", "w", "e"], submodestr)
+        submode = getmode(*submodestr)
     else:
         submode = "d"
 
@@ -109,7 +109,7 @@ def main():
     else:
         raise Exception("submode not found")
 
-    gamemode = getmode(["t", "n", "s", "m"], gamemodestr)
+    gamemode = getmode(*gamemodestr)
 
     if gamemode == "t":
         param = getparam("Enter max time in minutes", int)
