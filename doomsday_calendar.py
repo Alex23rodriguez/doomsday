@@ -202,7 +202,18 @@ def update(config):
         print("\tcorrect!")
     else:
         mistakes += 1
-        print("\twrong... " + date.strftime("%A"))
+        if mode == "d":
+            ans = dt(2100, date.month, date.day).strftime("(%d %b: %w)")
+        else:
+            cent = date.year // 100
+            centd, year = [2, 0, 5, 3][(cent) % 4], date.year % 100
+            a, b = year // 12, year % 12
+            yearstr = f"{cent*100}: {centd}, {year-b}: {a%7}, {b}: {(b+b//4)%7}"
+            if mode == "n":
+                ans = dt(2100, date.month, date.day).strftime(f"(%d %b: %w, {yearstr})")
+            else:
+                ans = f"({yearstr})"
+        print("\twrong... " + date.strftime(f"%A {ans}"))
 
 
 def equal(config, data: dt, inpt: str):
@@ -220,3 +231,10 @@ def get_rand_date(config) -> dt:
 
 if __name__ == "__main__":
     main()
+
+###
+
+
+def odd11(y):
+    d = (y + 11 * (y % 2)) / 2
+    return 7 - (d + 11 * d % 2) % 7
