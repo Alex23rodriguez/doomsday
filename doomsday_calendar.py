@@ -226,18 +226,25 @@ def equal(config, data: dt, inpt: str):
 
 
 ### specific gameplay functions
+def isleapyear(year):
+    return year % 400 == 0 or (year % 4 == 0 and year % 100 != 0)
+
 
 def explain(config, date):
     mode = config["mode"]
+
+    # 2004 is a leap year and dd is sunday, 2100 is not and dd is sunday
+    day = dt(2004 if isleapyear(date.year) else 2100, date.month, date.day).strftime("%d %b: %w")
+
     if mode == "d":
-        ans = dt(2100, date.month, date.day).strftime("(%d %b: %w)")
+        ans = f"({day})"
     else:
         cent = date.year // 100
         centd, year = [2, 0, 5, 3][(cent) % 4], date.year % 100
         a, b = year // 12, year % 12
         yearstr = f"{cent*100}: {centd}, {year-b}: {a%7}, {b}: {(b+b//4)%7}"
         if mode == "n":
-            ans = dt(2100, date.month, date.day).strftime(f"(%d %b: %w, {yearstr})")
+            ans = f"({day}, {yearstr})"
         else:
             ans = f"({yearstr})"
     return ans

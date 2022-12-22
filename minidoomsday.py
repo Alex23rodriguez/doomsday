@@ -10,12 +10,20 @@ def equal(config, data: dt, inpt: str):
     return data.strftime("%w") == inpt or data.strftime("%a").lower() == inpt.lower()
 
 
-def explain(config, date):
+def isleapyear(year):
+    return year % 400 == 0 or (year % 4 == 0 and year % 100 != 0)
+
+
+def explain(date):
+    # 2004 is a leap year and dd is sunday, 2100 is not and dd is sunday
+    day = dt(2004 if isleapyear(date.year) else 2100, date.month, date.day).strftime(
+        "%d %b: %w"
+    )
     cent = date.year // 100
     centd, year = [2, 0, 5, 3][(cent) % 4], date.year % 100
     a, b = year // 12, year % 12
     yearstr = f"{cent*100}: {centd}, {year-b}: {a%7}, {b}: {(b+b//4)%7}"
-    ans = dt(2100, date.month, date.day).strftime(f"(%d %b: %w, {yearstr})")
+    ans = f"({day}, {yearstr})"
     return ans
 
 
@@ -41,7 +49,7 @@ def oneround():
         print("\tcorrect!")
         return True
     else:
-        ans = explain(config, date) if config["explain"] else ""
+        ans = explain(date) if config["explain"] else ""
         print("\twrong... " + date.strftime(f"%A {ans}"))
         return False
 
