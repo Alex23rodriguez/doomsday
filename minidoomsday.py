@@ -6,7 +6,7 @@ def get_rand_date(config) -> dt:
     return config["start"] + timedelta(days=randint(0, config["total_days"]))
 
 
-def equal(config, data: dt, inpt: str):
+def equal(data: dt, inpt: str):
     return data.strftime("%w") == inpt or data.strftime("%a").lower() == inpt.lower()
 
 
@@ -39,13 +39,13 @@ config = {
 
 
 # gameplay
-
-
 def oneround():
     date = get_rand_date(config)
     x = input(date.strftime("%d %B, %Y: "))
 
-    if equal(config, date, x):
+    if x == "no time!":
+        exit()
+    if equal(date, x):
         print("\tcorrect!")
         return True
     else:

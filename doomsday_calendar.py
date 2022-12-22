@@ -212,7 +212,7 @@ def update(config):
         return
 
     # update stats
-    if equal(config, date, x):
+    if equal(date, x):
         score += 1
         print("\tcorrect!")
     else:
@@ -221,7 +221,7 @@ def update(config):
         print("\twrong... " + date.strftime(f"%A {ans}"))
 
 
-def equal(config, data: dt, inpt: str):
+def equal(data: dt, inpt: str):
     return data.strftime("%w") == inpt or data.strftime("%a").lower() == inpt.lower()
 
 
