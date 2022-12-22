@@ -35,13 +35,13 @@ mode: """, ["n", "d", "y"]
 submodestr = """n: normal mode. guess random dates for the current year and next year (default)
 c: custom mode. guess random dates for custom range.
 w: wide mode. guess random dates this century and the previous one
-e: extreme mode. guess random dates between the year 1753 and 3000
+e: extreme mode. guess random dates between the year 1753 and 2200
 mode: """, ["n", "c", "w", "e"]
 
 gamemodestr = """t: timed mode. game ends when timer runs out (default)
 n: number of questions mode. game ends when a certain number of questions, regardless of right or wrong answer.
 s: score mode. game ends when a certain score is reached
-m: mistake mode. game ends when a certain number of errors are made 
+m: mistake mode. game ends when a certain number of errors are made
 mode: """, ["t", "n", "s", "m"]
 
 
@@ -105,7 +105,7 @@ def main():
     elif submode == "d":
         x, y = (2100, 2100)  # this year is chosen because doomsday falls on a friday
     elif submode == "e":
-        x, y = (1753, 3000)
+        x, y = (1753, 2200)
     else:
         raise Exception("submode not found")
 
