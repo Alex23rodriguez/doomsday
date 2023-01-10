@@ -1,5 +1,6 @@
 from datetime import datetime as dt, timedelta
 from random import randint
+from time import time
 
 
 def get_rand_date(config) -> dt:
@@ -55,11 +56,19 @@ def oneround():
 
 
 print("answer 3 in a row to access terminal")
+starttime = time()
 streak = 0
+count = 0
 while True:
+    count += 1
     if oneround():
         streak += 1
     else:
         streak = 0
     if streak == 3:
         break
+
+t = int(time() - starttime)
+print(f"time:\t{t//60} mins {t%60} seconds")
+avg = t // count
+print(f"avg:\t{avg//60} mins {avg%60} seconds")
