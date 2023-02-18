@@ -58,10 +58,12 @@ def oneround():
 print("answer 3 in a row to access terminal")
 starttime = time()
 streak = 0
+corr = 0
 count = 0
 while True:
     count += 1
     if oneround():
+        corr += 1
         streak += 1
     else:
         streak = 0
@@ -72,3 +74,6 @@ t = int(time() - starttime)
 print(f"time:\t{t//60} mins {t%60} seconds")
 avg = t // count
 print(f"avg:\t{avg//60} mins {avg%60} seconds")
+
+with open("/home/pi/Documents/Scripts/logs/dd.log", "a") as f:
+    f.write(f"\n{dt.now()}: {avg} sec, {corr}/{count}")
