@@ -101,8 +101,7 @@ class Game:
         print("===stats===")
         t = int(time() - self.starttime)
         print(f"time:\t{t//60} mins {t%60} seconds")
-        print(f"score:\t{self.score}")
-        print(f"errors:\t{self.mistakes}")
+        print(f"score:\t{self.score}/{self.score + self.mistakes}")
 
     def _done(self):
         return (
