@@ -8,6 +8,18 @@ parser = ArgumentParser()
 
 parser.add_argument("gamemode", nargs="?", choices=["t", "n", "s", "m", "c"])
 parser.add_argument("param", nargs="?", type=int)
+parser.add_argument(
+    "--quiet",
+    "-q",
+    action="store_true",
+    help="disable feedback (whether an answer is correct or not)",
+)
+parser.add_argument(
+    "--noexplain",
+    "-e",
+    action="store_true",
+    help="a wrong answer won't be explained",
+)
 
 args = parser.parse_args()
 
@@ -85,8 +97,8 @@ class Game:
         update: Callable[[], tuple[bool, str]],
     ):
         self.update = update
-        self.quiet = False
-        self.explain = True
+        self.quiet = args.quiet
+        self.explain = not args.noexplain
         self._reset()
 
     def _reset(self):
