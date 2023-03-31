@@ -21,6 +21,13 @@ parser.add_argument(
     help="a wrong answer won't be explained",
 )
 
+parser.add_argument(
+    "--repeat",
+    "-r",
+    action="store_true",
+    help="a wrong answer will be repeated until gotten right (overrides -e)",
+)
+
 args = parser.parse_args()
 
 if args.gamemode and not args.param:
@@ -94,11 +101,12 @@ def getparam(prompt: str, validfunc):
 class Game:
     def __init__(
         self,
-        update: Callable[[], tuple[bool, str]],
+        update: Callable[[bool], tuple[bool, str]],
     ):
         self.update = update
         self.quiet = args.quiet
-        self.explain = not args.noexplain
+        self.repeat = args.repeat
+        self.explain = not args.noexplain and not self.repeat
         self._reset()
 
     def _reset(self):
@@ -123,8 +131,9 @@ class Game:
         self._play()
 
     def _play(self):
+        correct = False
         while not self._done():
-            correct, explain = self.update()
+            correct, explain = self.update(self.repeat and not correct)
             if not self.timeup:
                 if correct:
                     if not self.quiet:
