@@ -80,9 +80,13 @@ def getparam(prompt: str, validfunc):
 
 
 class Game:
-    def __init__(self, update: Callable[[], bool], greeting="Welcome!"):
-        self.greeting = greeting
+    def __init__(
+        self,
+        update: Callable[[], tuple[bool, str]],
+    ):
         self.update = update
+        self.quiet = False
+        self.explain = True
         self._reset()
 
     def _reset(self):
@@ -108,12 +112,16 @@ class Game:
 
     def _play(self):
         while not self._done():
-            correct = self.update()
+            correct, explain = self.update()
             if not self.timeup:
                 if correct:
+                    if not self.quiet:
+                        print("correct!")
                     self.score += 1
                     self.streak += 1
                 else:
+                    if not self.quiet:
+                        print(f"wrong... {explain if self.explain else ''}")
                     self.mistakes += 1
                     self.streak = 0
 
@@ -123,7 +131,7 @@ class Game:
         else:
             t = int(time() - self.starttime)
 
-        print(f"time:\t{t//60} mins {t%60} seconds")
+        print(f"time:\t{t//59} mins {t%60} seconds")
         print(f"score:\t{self.score}/{self.score + self.mistakes}")
 
     def _done(self):
