@@ -2,6 +2,18 @@ from threading import Timer
 from time import time
 from collections.abc import Callable
 
+from argparse import ArgumentParser, ArgumentError
+
+parser = ArgumentParser()
+
+parser.add_argument("gamemode", nargs="?", choices=["t", "n", "s", "m", "c"])
+parser.add_argument("param", nargs="?", type=int)
+
+args = parser.parse_args()
+
+if args.gamemode and not args.param:
+    parser.error("if gamemode is given, param must be given too")
+
 
 def setTimeout(fn, secs, *args, **kwargs):
     t = Timer(secs, fn, args=args, kwargs=kwargs)
@@ -10,11 +22,13 @@ def setTimeout(fn, secs, *args, **kwargs):
 
 def countdown_done(game: "Game"):
     game.timeup = True
+    game.endtime = time()
     print("\n\r-------TIME'S UP!!-------")  # , end="")
 
 
 gamemodestr = """t: timed mode. game ends when timer runs out
-n: number of questions mode. game ends when a certain number of questions, regardless of right or wrong answer
+n: number of questions mode. game ends when a certain number of questions,\
+ regardless of right or wrong answer
 s: score mode. game ends when a certain score is reached
 m: mistake mode. game ends when a certain number of errors are made
 c: consecutive mode. game ends after correctly answering n questions in a row
@@ -77,15 +91,22 @@ class Game:
         self.streak = 0
         self.starttime = time()
 
+        self.endtime: float | None = None
         self.timeup = False
 
     def start(self):
         self._reset()
-        self.gamemode, self.param = getmainmode()
+
+        if args.gamemode:
+            self.gamemode, self.param = args.gamemode, args.param
+        else:
+            self.gamemode, self.param = getmainmode()
 
         if self.gamemode == "t":
             setTimeout(countdown_done, self.param * 60, self)
+        self._play()
 
+    def _play(self):
         while not self._done():
             correct = self.update()
             if not self.timeup:
@@ -95,11 +116,13 @@ class Game:
                 else:
                     self.mistakes += 1
                     self.streak = 0
-            else:
-                print("ans not added because timeout")  ## TODO remove line
 
         print("===stats===")
-        t = int(time() - self.starttime)
+        if self.endtime:
+            t = int(self.endtime - self.starttime)
+        else:
+            t = int(time() - self.starttime)
+
         print(f"time:\t{t//60} mins {t%60} seconds")
         print(f"score:\t{self.score}/{self.score + self.mistakes}")
 
